@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb">
+  <meta name="description" content="日常節奏：簡單安排每天的行程與待辦。">
+  <title>日常節奏｜我的每日計畫</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme:light; --ink:#24233a; --muted:#88869e; --line:#eeedf4; --primary:#7158e8; --primary-dark:#6249d5; --primary-soft:#f1eeff; --surface:#fff; --page:#f9f8fc; --mint:#dff5ec; --shadow:0 16px 50px rgba(46,37,83,.07); --radius:22px; }
+    :root { font-synthesis:none; text-rendering:optimizeLegibility; -webkit-font-smoothing:antialiased; }
+    body { background:radial-gradient(ellipse at 85% -10%,#eee9ff 0,transparent 36%),radial-gradient(ellipse at 5% 30%,#e9f7f3 0,transparent 23%),var(--page); }
+    .page-shell { width:min(1160px,calc(100% - 44px)); padding:30px 0 54px; }
+    .topbar { margin-bottom:48px; }
+    .brand { gap:13px; font-size:19px; }
+    .brand-mark { width:44px; height:44px; border-radius:15px; background:linear-gradient(145deg,#8770f5,#6449d6); box-shadow:0 9px 22px rgba(113,88,232,.28); }
+    .top-note { font-size:13px; letter-spacing:.03em; }
+    .welcome { align-items:center; margin-bottom:30px; }
+    .eyebrow { color:#927ee8; letter-spacing:.17em; }
+    h1 { font-size:clamp(30px,4vw,42px); letter-spacing:-.045em; }
+    .date-chip { padding:11px 16px; border:1px solid rgba(227,222,242,.9); border-radius:14px; box-shadow:0 6px 18px rgba(47,38,80,.04); }
+    .dashboard { grid-template-columns:minmax(0,1.5fr) minmax(320px,.86fr); gap:22px; }
+    .left-column,.right-column { gap:22px; }
+    .card { padding:27px; border:1px solid rgba(235,232,244,.95); border-radius:var(--radius); box-shadow:var(--shadow); }
+    .card-heading { margin-bottom:21px; }
+    .card-heading h2 { font-size:19px; font-weight:750; }
+    .count { min-width:30px; height:30px; border-radius:10px; }
+    .schedule-item { grid-template-columns:60px 4px minmax(0,1fr) auto; min-height:92px; gap:15px; }
+    .timeline-mark { width:4px; height:42px; border-radius:8px; }
+    .event-title { font-size:15px; font-weight:700; }
+    .event-tag { padding:5px 10px; border-radius:20px; background:#f5f2ff; color:#7864c8; }
+    .todo-item { padding:13px; border-radius:15px; transition:transform .18s,border-color .18s,box-shadow .18s; }
+    .todo-item:hover { transform:translateY(-2px); border-color:#ddd6ff; box-shadow:0 8px 20px rgba(63,47,120,.06); }
+    .todo-icon { border-radius:12px; }
+
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--page); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif; line-height:1.6; }
+    button,input,textarea { font:inherit; }
+    .page-shell { width:min(1120px,calc(100% - 40px)); margin:0 auto; padding:38px 0 56px; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:36px; }
+    .brand { display:flex; align-items:center; gap:12px; font-weight:750; letter-spacing:.02em; font-size:18px; }
+    .brand-mark { display:grid; place-items:center; width:42px; height:42px; border-radius:14px; background:var(--primary); color:#fff; font-size:21px; box-shadow:0 7px 16px rgba(101,88,211,.25); }
+    .top-note { color:var(--muted); font-size:13px; }
+    .welcome { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:27px; }
+    .eyebrow { margin:0 0 5px; color:var(--primary); font-size:12px; font-weight:750; letter-spacing:.12em; text-transform:uppercase; }
+    h1 { margin:0; font-size:clamp(27px,4vw,36px); line-height:1.25; letter-spacing:-.035em; }
+    .date-chip { flex:0 0 auto; padding:10px 15px; border:1px solid var(--line); border-radius:12px; background:var(--surface); color:#536078; font-size:14px; font-weight:650; }
+    .dashboard { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(290px,.85fr); gap:20px; align-items:start; }
+    .left-column,.right-column { display:grid; gap:20px; }
+    .card { padding:24px; border:1px solid rgba(230,234,243,.9); border-radius:18px; background:var(--surface); box-shadow:var(--shadow); }
+    .card-heading { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:19px; }
+    .card-heading h2 { margin:0; font-size:18px; letter-spacing:-.02em; }
+    .subtle { color:var(--muted); font-size:13px; }
+    .count { display:inline-grid; place-items:center; min-width:27px; height:27px; padding:0 7px; border-radius:9px; background:var(--primary-soft); color:var(--primary); font-size:12px; font-weight:750; }
+    .schedule-list { display:grid; }
+    .schedule-item { display:grid; grid-template-columns:63px 3px minmax(0,1fr) auto; gap:14px; align-items:center; min-height:85px; border-top:1px solid var(--line); }
+    .schedule-item:first-child { border-top:0; }
+    .time { color:#4b5670; font-size:14px; font-weight:720; font-variant-numeric:tabular-nums; }
+    .timeline-mark { width:3px; height:38px; border-radius:5px; background:#8e83ee; }
+    .schedule-item:nth-child(2) .timeline-mark { background:#58bca5; }
+    .schedule-item:nth-child(3) .timeline-mark { background:#efa85e; }
+    .event-title { margin:0; font-size:15px; font-weight:700; }
+    .event-meta { margin:3px 0 0; color:var(--muted); font-size:12px; }
+    [hidden] { display:none !important; }
+    .event-tag { padding:5px 9px; border-radius:8px; background:#f5f6fa; color:#707b91; font-size:11px; white-space:nowrap; }
+    .todo-list { display:grid; gap:10px; }
+    .todo-item { display:flex; align-items:center; gap:12px; padding:12px; border:1px solid var(--line); border-radius:12px; }
+    .todo-icon { display:grid; place-items:center; flex:0 0 34px; height:34px; border-radius:10px; background:#f4f2ff; color:var(--primary); font-size:15px; }
+    .todo-copy { min-width:0; flex:1; }
+    .todo-title { margin:0; font-size:13px; font-weight:680; }
+    .todo-detail { margin:2px 0 0; color:var(--muted); font-size:11px; }
+    .status { flex:0 0 auto; padding:4px 8px; border-radius:7px; font-size:10px; font-weight:700; }
+    .status-progress { background:#fff4df; color:#ad741a; }
+    .status-pending { background:#f1f3f7; color:#778198; }
+    .status-done { background:#e8f7f0; color:#318363; }
+    .form-card { background:linear-gradient(145deg,#fff 0%,#fbfaff 100%); }
+    .form-intro { margin:-10px 0 18px; color:var(--muted); font-size:12px; }
+    .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:13px 12px; }
+    .field { display:grid; gap:6px; }
+    .field-wide { grid-column:1 / -1; }
+    .field label { color:#566179; font-size:12px; font-weight:650; }
+    .field input,.field textarea { width:100%; min-width:0; padding:10px 11px; border:1px solid #e4e8f0; border-radius:9px; outline:none; background:#fff; color:var(--ink); font-size:13px; transition:border-color .15s,box-shadow .15s; }
+    .field input:focus,.field textarea:focus { border-color:#9a91ec; box-shadow:0 0 0 3px rgba(101,88,211,.1); }
+    .field textarea { min-height:66px; resize:vertical; }
+    .field select { width:100%; min-width:0; padding:10px 11px; border:1px solid #e4e8f0; border-radius:9px; outline:none; background:#fff; color:var(--ink); font-size:13px; }
+    .field select:focus { border-color:#9a91ec; box-shadow:0 0 0 3px rgba(101,88,211,.1); }
+    .submit-button { width:100%; margin-top:16px; padding:11px 14px; border:0; border-radius:10px; background:var(--primary); color:#fff; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 6px 13px rgba(101,88,211,.19); }
+    .submit-button:hover { background:#5548c2; }
+    .form-hint { margin:10px 0 0; color:#929bad; text-align:center; font-size:11px; }
+    footer { margin-top:25px; color:#9aa3b3; text-align:center; font-size:11px; }
+    .hero-panel { position:relative; overflow:hidden; display:flex; align-items:center; justify-content:space-between; gap:24px; margin-bottom:24px; padding:28px 32px; border:1px solid rgba(255,255,255,.82); border-radius:25px; background:linear-gradient(118deg,#fff 12%,#f5f1ff 68%,#eaf8f3 100%); box-shadow:var(--shadow); }
+    .hero-panel:after { position:absolute; top:-65px; right:22%; width:190px; height:190px; border:1px solid rgba(126,104,223,.12); border-radius:50%; content:""; box-shadow:0 0 0 24px rgba(126,104,223,.035),0 0 0 50px rgba(126,104,223,.025); pointer-events:none; }
+    .hero-copy,.hero-stats { position:relative; z-index:1; }
+    .hero-copy .eyebrow { margin-bottom:9px; }
+    .hero-copy h1 { font-size:clamp(30px,4vw,43px); }
+    .hero-copy p:last-child { margin:10px 0 0; color:var(--muted); font-size:13px; }
+    .hero-stats { display:flex; gap:11px; }
+    .hero-stat { min-width:100px; padding:12px 15px; border:1px solid rgba(255,255,255,.9); border-radius:15px; background:rgba(255,255,255,.76); text-align:center; backdrop-filter:blur(8px); }
+    .hero-stat strong { display:block; color:#634bd0; font-size:23px; line-height:1.2; }
+    .hero-stat span { color:var(--muted); font-size:11px; }
+    .date-chip { display:flex; align-items:center; gap:9px; }
+    .dashboard-tabs { display:flex; gap:5px; margin-bottom:16px; padding:5px; border:1px solid #ece9f2; border-radius:14px; background:#f0eef5; }
+    .tab-button { flex:1; min-height:39px; padding:8px 13px; border:0; border-radius:10px; background:transparent; color:#77738a; font-size:13px; font-weight:700; cursor:pointer; transition:background .18s,color .18s,box-shadow .18s; }
+    .tab-button.active { background:#fff; color:var(--primary-dark); box-shadow:0 2px 9px rgba(43,33,73,.09); }
+    .tab-button:focus-visible,.primary-button:focus-visible,.icon-button:focus-visible,.filter-button:focus-visible { outline:3px solid rgba(113,88,232,.3); outline-offset:2px; }
+    .panel-toolbar { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:16px; }
+    .panel-toolbar h2 { margin:0; font-size:19px; }
+    .primary-button { display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:40px; padding:9px 14px; border:0; border-radius:11px; background:linear-gradient(135deg,#8069ed,#654bd7); color:#fff; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 5px 13px rgba(113,88,232,.21); transition:transform .18s,box-shadow .18s; }
+    .primary-button:hover { transform:translateY(-1px); box-shadow:0 8px 17px rgba(113,88,232,.26); }
+    .icon-button { display:grid; place-items:center; flex:0 0 32px; width:32px; height:32px; padding:0; border:1px solid transparent; border-radius:9px; background:transparent; color:#827f96; cursor:pointer; transition:background .15s,color .15s; }
+    .icon-button:hover { background:#f2efff; color:#6249d5; }
+    .icon-button.danger:hover { background:#fff0f0; color:#d6555c; }
+    .row-actions { display:flex; gap:2px; }
+    .event-tag { display:inline-flex; align-items:center; gap:4px; }
+    .schedule-item { padding:9px 0; }
+    .schedule-content { min-width:0; }
+    .schedule-item time { font-variant-numeric:tabular-nums; }
+    .schedule-item.is-past { opacity:.63; }
+    .schedule-item.is-next .event-title:after { display:inline-block; margin-left:8px; padding:2px 7px; border-radius:6px; background:#e8f7f0; color:#398868; content:"即將開始"; font-size:9px; font-weight:700; vertical-align:middle; }
+    .todo-item { gap:10px; }
+    .todo-toggle { display:grid; place-items:center; flex:0 0 23px; width:23px; height:23px; padding:0; border:1.5px solid #ded9ea; border-radius:8px; background:#fff; color:#fff; cursor:pointer; transition:all .15s; }
+    .todo-toggle:hover { border-color:var(--primary); }
+    .todo-item.is-done .todo-toggle { border-color:#60b99b; background:#60b99b; }
+    .todo-item.is-done .todo-title { color:#9996a8; text-decoration:line-through; }
+    .todo-item.is-done .todo-icon { background:#eaf7f1; color:#52a887; }
+    .todo-item.is-done { background:#fcfefd; }
+    .filter-bar { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:14px; }
+    .filter-group { display:flex; gap:4px; padding:3px; border-radius:10px; background:#f5f4f8; }
+    .filter-date { width:146px; padding:7px 9px; border:1px solid #e9e5f0; border-radius:9px; background:#fff; color:#706c82; font:inherit; font-size:11px; }
+    .filter-date:focus-visible { outline:3px solid rgba(113,88,232,.22); border-color:#9b88ed; }
+    .filter-button { padding:5px 9px; border:0; border-radius:7px; background:transparent; color:#807c92; font-size:11px; cursor:pointer; }
+    .filter-button.active { background:#fff; color:#604bcc; box-shadow:0 1px 4px rgba(43,33,73,.08); }
+    .empty-state { padding:29px 15px; color:var(--muted); text-align:center; }
+    .empty-state .empty-emoji { display:block; margin-bottom:7px; font-size:28px; }
+    .empty-state strong { display:block; color:#514b65; font-size:13px; }
+    .empty-state span { font-size:11px; }
+    .storage-note { display:flex; align-items:center; gap:7px; margin:15px 2px 0; color:#9996a8; font-size:11px; }
+    .storage-note i { width:7px; height:7px; border-radius:50%; background:#62b995; }
+    .form-card { position:sticky; top:18px; }
+    .field input,.field textarea,.field select { border-color:#e7e3ef; border-radius:11px; transition:border-color .15s,box-shadow .15s; }
+    .field input:focus,.field textarea:focus,.field select:focus { border-color:#9b88ed; box-shadow:0 0 0 3px rgba(113,88,232,.1); }
+    .submit-button { min-height:43px; border-radius:12px; background:linear-gradient(135deg,#8069ed,#654bd7); }
+    .form-hint { line-height:1.6; }
+    .modal-backdrop { position:fixed; inset:0; z-index:10; display:none; align-items:center; justify-content:center; padding:20px; background:rgba(30,26,47,.4); backdrop-filter:blur(5px); }
+    .modal-backdrop.open { display:flex; animation:fade-in .16s ease-out; }
+    .modal { width:min(100%,490px); max-height:min(90vh,760px); overflow:auto; padding:27px; border:1px solid rgba(255,255,255,.8); border-radius:23px; background:#fff; box-shadow:0 24px 80px rgba(33,25,59,.2); animation:modal-in .2s ease-out; }
+    .modal-top { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:20px; }
+    .modal-top h2 { margin:0; font-size:21px; }
+    .modal-top p { margin:4px 0 0; color:var(--muted); font-size:12px; }
+    .modal .form-grid { margin-top:4px; }
+    .modal-actions { display:flex; justify-content:flex-end; gap:9px; margin-top:21px; }
+    .secondary-button { min-height:40px; padding:9px 15px; border:1px solid #e8e5ee; border-radius:11px; background:#fff; color:#77738a; font-size:13px; font-weight:650; cursor:pointer; }
+    .modal .form-hint { min-height:16px; margin:9px 0 0; color:#d2535c; }
+    .toast { position:fixed; right:22px; bottom:22px; z-index:20; display:flex; align-items:center; gap:9px; max-width:calc(100% - 44px); padding:12px 17px; transform:translateY(16px); border:1px solid rgba(255,255,255,.55); border-radius:14px; background:#302a44; color:#fff; box-shadow:0 12px 28px rgba(31,24,47,.22); font-size:13px; opacity:0; pointer-events:none; transition:opacity .2s,transform .2s; }
+    .toast.show { transform:translateY(0); opacity:1; }
+    @keyframes fade-in { from { opacity:0; } to { opacity:1; } }
+    @keyframes modal-in { from { transform:translateY(8px) scale(.98); opacity:.7; } to { transform:translateY(0) scale(1); opacity:1; } }
+
+    @media (max-width:760px) {
+      .hero-panel { align-items:flex-start; flex-direction:column; gap:18px; padding:23px; }
+      .hero-stats { width:100%; }
+      .hero-stat { flex:1; min-width:0; }
+      .dashboard { grid-template-columns:1fr; }
+      .form-card { position:static; }
+      .page-shell { width:min(100% - 28px,560px); padding-top:24px; }
+      .topbar { margin-bottom:27px; }
+      .top-note { display:none; }
+      .topbar { margin-bottom:28px; }
+      .hero-panel { padding:20px; border-radius:20px; }
+      .hero-panel:after { right:-70px; }
+      .hero-copy p:last-child { max-width:30ch; }
+      .hero-stats { gap:7px; }
+      .hero-stat { padding:10px 8px; }
+      .hero-stat strong { font-size:20px; }
+      .welcome { align-items:start; flex-direction:row; gap:13px; }
+      .filter-date { width:132px; }
+      .filter-bar { align-items:flex-start; flex-wrap:wrap; }
+      .dashboard { grid-template-columns:1fr; }
+      .card { padding:20px; }
+    }
+    @media (max-width:420px) {
+      .schedule-item { grid-template-columns:49px 3px minmax(0,1fr) auto; gap:9px; }
+      .schedule-item .row-actions { grid-column:4; }
+      .schedule-item .event-tag { display:none; }
+      .schedule-item.is-next .event-title:after { margin-left:4px; padding:1px 5px; }
+      .event-meta { overflow-wrap:anywhere; }
+      .welcome { gap:11px; }
+      .date-chip { padding:9px 12px; }
+      .panel-toolbar h2 { font-size:17px; }
+      .panel-toolbar .primary-button { min-height:37px; padding:8px 10px; font-size:12px; }
+      .card { padding:18px; }
+      .modal { padding:22px 18px; }
+      .todo-item { gap:8px; }
+      .todo-title { font-size:12px; }
+      .status { font-size:9px; }
+      .form-grid { grid-template-columns:1fr; }
+      .field-wide { grid-column:auto; }
+      .date-chip { font-size:13px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">✳</span><span>日常節奏</span></div>
+      <div class="top-note">把每一天，安排得剛剛好。</div>
+    </header>
+
+    <section class="hero-panel" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <p class="eyebrow">YOUR DAY, YOUR WAY</p>
+        <h1 id="page-title">把今天，過成喜歡的樣子。</h1>
+        <p id="hero-message">從一個小計畫開始，讓每件重要的事都有自己的位置。</p>
+      </div>
+      <div class="hero-stats" aria-label="今日摘要">
+        <div class="hero-stat"><strong id="hero-event-count">0</strong><span>今日行程</span></div>
+        <div class="hero-stat"><strong id="hero-todo-count">0</strong><span>待完成</span></div>
+        <div class="hero-stat"><strong id="hero-done-count">0</strong><span>已完成</span></div>
+      </div>
+    </section>
+    <section class="welcome" aria-label="今天日期">
+      <div class="eyebrow" id="today-date">載入日期中…</div>
+      <button class="date-chip" id="today-button" type="button" title="回到今天的行程">◎&nbsp; 回到今天</button>
+    </section>
+
+    <div class="dashboard">
+      <div class="left-column">
+        <section class="card" aria-labelledby="schedule-title">
+          <div class="dashboard-tabs" role="tablist" aria-label="管理內容">
+            <button class="tab-button active" id="events-tab" type="button" role="tab" aria-selected="true" aria-controls="events-panel">行程安排</button>
+            <button class="tab-button" id="todos-tab" type="button" role="tab" aria-selected="false" aria-controls="todos-panel">待辦清單</button>
+          </div>
+          <section id="events-panel" role="tabpanel" aria-labelledby="events-tab">
+            <div class="panel-toolbar"><h2 id="schedule-title">行程安排 <span class="count" id="schedule-count">0</span></h2><button class="primary-button" type="button" data-add="event"><span aria-hidden="true">＋</span> 新增行程</button></div>
+            <div class="filter-bar">
+              <span class="subtle" id="event-date-label">今天的安排</span>
+              <input class="filter-date" id="event-filter-date" aria-label="選擇行程日期" type="date">
+            </div>
+            <div class="schedule-list" id="schedule-list" aria-live="polite"></div>
+          </section>
+          <section id="todos-panel" role="tabpanel" aria-labelledby="todos-tab" hidden>
+            <div class="panel-toolbar"><h2 id="todo-title">待辦清單 <span class="count" id="todo-count">0</span></h2><button class="primary-button" type="button" data-add="todo"><span aria-hidden="true">＋</span> 新增待辦</button></div>
+            <div class="filter-bar">
+              <span class="subtle" id="todo-summary">好好完成每件小事</span>
+              <div class="filter-group" aria-label="篩選待辦事項">
+                <button class="filter-button active" type="button" data-filter="all">全部</button>
+                <button class="filter-button" type="button" data-filter="active">未完成</button>
+                <button class="filter-button" type="button" data-filter="done">已完成</button>
+              </div>
+            </div>
+            <div class="todo-list" id="todo-list" aria-live="polite"></div>
+          </section>
+        </section>
+        <p class="storage-note"><i aria-hidden="true"></i>資料只儲存在這台裝置的瀏覽器中</p>
+      </div>
+      <aside class="right-column">
+        <section class="card form-card" aria-labelledby="add-event-title">
+          <div class="card-heading"><h2 id="add-event-title">快速新增行程</h2><span class="count" aria-hidden="true">✦</span></div>
+          <p class="form-intro">有個新計畫？先把它放進今天。</p>
+          <form id="quick-event-form">
+            <div class="form-grid">
+              <div class="field field-wide"><label for="quick-event-name">行程名稱 <span aria-hidden="true">*</span></label><input id="quick-event-name" name="title" type="text" placeholder="例如：設計討論會" autocomplete="off" required maxlength="80"></div>
+              <div class="field"><label for="quick-event-date">日期</label><input id="quick-event-date" name="date" type="date" required></div>
+              <div class="field"><label for="quick-event-time">開始時間</label><input id="quick-event-time" name="time" type="time" required></div>
+              <div class="field field-wide"><label for="quick-event-place">地點</label><input id="quick-event-place" name="place" type="text" placeholder="輸入地點或線上會議連結" autocomplete="off" maxlength="100"></div>
+              <div class="field field-wide"><label for="quick-event-note">備註</label><textarea id="quick-event-note" name="note" placeholder="補充行程相關資訊…" maxlength="300"></textarea></div>
+            </div>
+            <button class="submit-button" type="submit">＋&nbsp; 建立行程</button>
+            <p class="form-hint">加入後可隨時編輯或刪除，資料會自動儲存在本機。</p>
+          </form>
+        </section>
+      </aside>
+    </div>
+    <footer>日常節奏 · 讓計畫成為生活的一部分</footer>
+
+  <div class="modal-backdrop" id="item-modal" aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-top">
+        <div><h2 id="modal-title">新增行程</h2><p id="modal-description">把重要的安排記下來。</p></div>
+        <button class="icon-button" id="modal-close" type="button" aria-label="關閉視窗">✕</button>
+      </div>
+      <form id="item-form" novalidate>
+        <input id="item-kind" type="hidden" value="event">
+        <input id="item-id" type="hidden" value="">
+        <div class="form-grid">
+          <div class="field field-wide"><label id="item-title-label" for="item-title">行程名稱 <span aria-hidden="true">*</span></label><input id="item-title" name="title" type="text" placeholder="例如：專案討論會" required maxlength="80" autocomplete="off"></div>
+          <div class="field field-wide" id="item-description-field"><label for="item-description">備註</label><input id="item-description" name="description" type="text" placeholder="補充一點說明…" maxlength="160"></div>
+          <div class="field field-wide" id="item-date-field"><label for="item-date">日期 <span aria-hidden="true">*</span></label><input id="item-date" name="date" type="date" required></div>
+          <div class="field" id="item-time-field"><label for="item-time">時間</label><input id="item-time" name="time" type="time"></div>
+          <div class="field" id="item-category-field"><label for="item-category">分類</label><select id="item-category" name="category"><option value="工作">工作</option><option value="生活">生活</option><option value="個人">個人</option><option value="學習">學習</option></select></div>
+          <div class="field field-wide" id="item-place-field"><label for="item-place">地點</label><input id="item-place" name="place" type="text" placeholder="例如：會議室 A" maxlength="100"></div>
+          <div class="field field-wide" id="item-note-field"><label for="item-note">詳細備註</label><textarea id="item-note" name="note" placeholder="補充行程相關資訊…" maxlength="300"></textarea></div>
+          <div class="field field-wide" id="item-status-field"><label for="item-status">目前狀態</label><select id="item-status" name="status"><option value="pending">尚未開始</option><option value="progress">進行中</option><option value="done">已完成</option></select></div>
+        </div>
+        <p class="form-hint" id="modal-error" role="alert"></p>
+        <div class="modal-actions"><button class="secondary-button" id="modal-cancel" type="button">取消</button><button class="primary-button" id="modal-save" type="submit">儲存</button></div>
+      </form>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"><span aria-hidden="true">✦</span><span id="toast-message"></span></div>
+
+  </main>
+  <script src="app.js" defer></script>
+</body>
+</html>
+
